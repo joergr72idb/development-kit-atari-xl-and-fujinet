@@ -51,9 +51,11 @@ Samples in `samples/`:
   FujiNet-PC; `tools/run-fujinet` restarts it automatically.
 - Only one FujiNet-PC can run at a time (UDP 9997, web port 8000) – stop other projects' instance first.
 - The FujiNet-PC web UI has no login: never forward port 8000 to the internet.
-- **OS ROM:** without ROM files atari800 uses its built-in AltirraOS, which works fine. For the
-  original Atari OS put your own ROM dump into `rom/` (not in git, copyrighted) and set
-  `ROM_OS_BB01R2=` in `atari800.cfg`.
+- **ROMs:** `atari800.cfg` uses the original Atari ROMs from `rom/` (not in git, copyrighted):
+  `REV02.ROM` = 800XL OS rev. 2 (default), plus 400/800 rev. A PAL/B NTSC, 1200XL rev. 10,
+  600XL rev. 1, 800XE rev. 3, XEGS rev. 4 and BASIC A/B/C (CRC-32 list: `rom/OSROMS.TXT`).
+  Without them atari800 falls back to its built-in AltirraOS. atari800 is built with
+  `--disable-download`, so it never fetches ROMs from the internet on its own.
 
 ## Using the kit from other projects
 

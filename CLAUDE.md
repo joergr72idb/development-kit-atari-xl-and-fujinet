@@ -5,6 +5,9 @@ Toolchain only - real programs live in their own project folders and point `DEV`
 - Everything is built by `tools/setup.sh` into `opt/` (sources `src/`, logs `build/logs/`); never install tools
   system-wide or into the home folder. FujiNet-PC's Python venv is `build/venv-fujinet` (`-V` option of its `build.sh`).
 - FujiNet-PC needs mbedTLS **3** (Homebrew `mbedtls@3`), passed via `MBEDTLS_ROOT_DIR`; 4.x is not what its CI uses.
+- atari800 is built with `--disable-download`: otherwise a missing ROM makes it download PC Xformer ROMs into
+  `rom/` next to the config and rewrite `atari800.cfg` - that happened once on 2026-11-14.
+- ROM paths in `atari800.cfg` are relative (`rom/...`): start atari800 from the kit folder (the Makefile does).
 - Homebrew's `atari800` has no NetSIO - always use `opt/atari800` (7.2.1 from source).
 - Start/stop FujiNet-PC only via `make fujinet` / `make stop` (or `tools/run-fujinet`): they match this kit's
   instance by its full path. Never `pkill -x fujinet` - that would also hit other projects' instances.

@@ -49,7 +49,7 @@ build_atari800() {
     step atari800 atari800
     clone atari800/atari800 atari800 "$ATARI800_TAG"
     ( cd "$SRC/atari800" && ./autogen.sh \
-        && ./configure --prefix="$OPT/atari800" --target=default --with-video=sdl2 --with-sound=sdl2 \
+        && ./configure --prefix="$OPT/atari800" --target=default --with-video=sdl2 --with-sound=sdl2 --disable-download \
         && make -j"$JOBS" && make install ) >"$LOG/atari800.log" 2>&1
     "$OPT/atari800/bin/atari800" -help | grep -q -- -netsio && echo "atari800 with NetSIO"
 }

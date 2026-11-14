@@ -36,14 +36,21 @@ build/hello-fb.xex: samples/hello.bas | build
 build:
 	mkdir -p build/logs
 
-# FujiNet-PC: NetSIO on UDP 9997, web UI http://localhost:8000, SD card = opt/fujinet-pc/SD
+# Ports - chosen so the Atari and the C64 kit can run side by side on one machine:
+#   Atari kit: web UI 127.0.0.1:8000, NetSIO UDP 9997 | C64 kit: web UI 127.0.0.1:8001, NetIEC TCP 1541
+WEB_PORT  ?= 8000
+NETSIO_PORT ?= 9997
+
+# FujiNet-PC: NetSIO (UDP) on NETSIO_PORT, web UI http://127.0.0.1:$(WEB_PORT) (local only), SD card = opt/fujinet-pc/SD
+# The [BOIP] port in fnconfig.ini is set from NETSIO_PORT on every start.
 fujinet: | build
+	@sed -i '' '/^\[BOIP\]/,/^\[/ s/^port=.*/port=$(NETSIO_PORT)/' $(FUJINET)/fnconfig.ini
 	@pgrep -f "$(FUJINET)/fujinet" >/dev/null || \
-	  ( nohup $(DEV)/tools/run-fujinet >> $(DEV)/build/logs/fujinet.log 2>&1 & sleep 2 )
+	  ( nohup $(DEV)/tools/run-fujinet -u http://127.0.0.1:$(WEB_PORT) >> $(DEV)/build/logs/fujinet.log 2>&1 & sleep 2 )
 
 # -no-kbdjoy: otherwise W/A/S/D, the keypad and Ctrl act as joysticks
 run: $(XEX) fujinet
-	$(ATARI800) -config atari800.cfg -no-kbdjoy0 -no-kbdjoy1 -xl -netsio -run $(XEX)
+	$(ATARI800) -config atari800.cfg -no-kbdjoy0 -no-kbdjoy1 -xl -netsio $(NETSIO_PORT) -run $(XEX)
 
 # only this kit's instance (matched by its path), never other projects' FujiNet-PC
 stop:

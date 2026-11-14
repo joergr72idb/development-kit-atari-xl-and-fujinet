@@ -11,6 +11,8 @@ Toolchain only - real programs live in their own project folders and point `DEV`
 - Homebrew's `atari800` has no NetSIO - always use `opt/atari800` (7.2.1 from source).
 - Start/stop FujiNet-PC only via `make fujinet` / `make stop` (or `tools/run-fujinet`): they match this kit's
   instance by its full path. Never `pkill -x fujinet` - that would also hit other projects' instances.
+- Ports: web UI 127.0.0.1:8000, NetSIO UDP 9997 (Makefile `WEB_PORT`/`NETSIO_PORT`; `make fujinet` writes the
+  [BOIP] port into fnconfig.ini). The C64 kit uses 8001 + TCP 1541 - both kits run at the same time (tested).
 - Each emulated power-on makes FujiNet-PC exit 75 (reboot); `tools/run-fujinet` restarts it. That is normal.
 - Verify a FujiNet program without watching the screen: `grep 'Fuji cmd' build/logs/fujinet.log` shows the
   commands that reached FujiNet-PC (e.g. `GET ADAPTER CONFIG` from `samples/hello.c`).

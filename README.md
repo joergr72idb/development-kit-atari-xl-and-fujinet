@@ -15,7 +15,7 @@ this folder; nothing is installed system-wide except a few Homebrew packages.
 ```
 cl65 / fastbasic ──► build/*.xex ──► atari800 -netsio ── UDP 9997 ──► FujiNet-PC
                                                           SD card: opt/fujinet-pc/SD
-                                                          web UI:  http://localhost:8000
+                                                          web UI:  http://127.0.0.1:8000
 ```
 
 ## Setup
@@ -49,8 +49,10 @@ Samples in `samples/`:
   atarixl runtime switches out (the call hangs).
 - Start FujiNet-PC before the emulator (`make run` does that). Each emulated power-on reboots
   FujiNet-PC; `tools/run-fujinet` restarts it automatically.
-- Only one FujiNet-PC can run at a time (UDP 9997, web port 8000) – stop other projects' instance first.
-- The FujiNet-PC web UI has no login: never forward port 8000 to the internet.
+- **Ports:** web UI `127.0.0.1:8000`, NetSIO UDP 9997 (`WEB_PORT` / `NETSIO_PORT` in the Makefile).
+  The C64 kit uses 8001 and TCP 1541, so both kits run side by side. Other FujiNet-PCs with the same
+  ports (e.g. the Berlin Blues BBS's own instance: 8000 + 9997) can't run at the same time as this one.
+- The web UI has no login; it listens on 127.0.0.1 only, so it isn't reachable from the network.
 - **ROMs:** `atari800.cfg` uses the original Atari ROMs from `rom/` (not in git, copyrighted):
   `REV02.ROM` = 800XL OS rev. 2 (default), plus 400/800 rev. A PAL/B NTSC, 1200XL rev. 10,
   600XL rev. 1, 800XE rev. 3, XEGS rev. 4 and BASIC A/B/C (CRC-32 list: `rom/OSROMS.TXT`).

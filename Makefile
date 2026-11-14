@@ -1,0 +1,54 @@
+# Development kit for Atari XL + FujiNet: cc65 (C + ca65 assembler), FastBasic, fujinet-lib,
+# atari800 with NetSIO and FujiNet-PC. All tools live in opt/ (built by tools/setup.sh).
+#
+#   make              build the samples into build/
+#   make run          FujiNet-PC + atari800 with build/hello-c.xex (other program: make run XEX=path)
+#   make stop         stop this kit's FujiNet-PC
+#
+# Other projects use the kit with  DEV ?= ../development-kit-atari-xl-and-fujinet  (see README).
+
+DEV       := $(CURDIR)
+CL65      := $(DEV)/opt/cc65/bin/cl65
+FASTBASIC := $(DEV)/opt/fastbasic/fastbasic
+FNLIB     := $(DEV)/opt/fujinet-lib
+FNLIBA    := $(wildcard $(FNLIB)/fujinet-atari-*.lib)
+ATARI800  := $(DEV)/opt/atari800/bin/atari800
+FUJINET   := $(DEV)/opt/fujinet-pc
+export CC65_HOME := $(DEV)/opt/cc65/share/cc65
+
+# -t atari, not atarixl: fujinet-lib calls the OS SIO vector, which atarixl switches out
+CFLAGS    := -t atari -O -I $(FNLIB) -g
+XEX       ?= build/hello-c.xex
+
+.PHONY: all run fujinet stop clean
+
+all: build/hello-c.xex build/hello-asm.xex build/hello-fb.xex
+
+build/hello-c.xex: samples/hello.c | build
+	$(CL65) $(CFLAGS) -m build/hello-c.map -Ln build/hello-c.lbl -o $@ $< $(FNLIBA)
+
+build/hello-asm.xex: samples/hello.s | build
+	$(CL65) -t atari -C atari-asm.cfg -Ln build/hello-asm.lbl -o $@ $<
+
+build/hello-fb.xex: samples/hello.bas | build
+	$(FASTBASIC) -o $@ $<
+
+build:
+	mkdir -p build/logs
+
+# FujiNet-PC: NetSIO on UDP 9997, web UI http://localhost:8000, SD card = opt/fujinet-pc/SD
+fujinet: | build
+	@pgrep -f "$(FUJINET)/fujinet" >/dev/null || \
+	  ( nohup $(DEV)/tools/run-fujinet >> $(DEV)/build/logs/fujinet.log 2>&1 & sleep 2 )
+
+# -no-kbdjoy: otherwise W/A/S/D, the keypad and Ctrl act as joysticks
+run: $(XEX) fujinet
+	$(ATARI800) -config atari800.cfg -no-kbdjoy0 -no-kbdjoy1 -xl -netsio -run $(XEX)
+
+# only this kit's instance (matched by its path), never other projects' FujiNet-PC
+stop:
+	@pkill -f "$(DEV)/tools/run-fujinet" || true
+	@pkill -f "$(FUJINET)/fujinet" || true
+
+clean:
+	rm -f build/*.xex build/*.map build/*.lbl build/*.o

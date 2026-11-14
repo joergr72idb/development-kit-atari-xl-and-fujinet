@@ -12,3 +12,10 @@ build/
 .vscode/
 .idea/
 *.swp
+
+# Toolchain (rebuilt by tools/setup.sh)
+src/
+opt/
+
+# Atari ROMs are copyrighted
+rom/

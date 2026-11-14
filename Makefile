@@ -3,6 +3,7 @@
 #
 #   make              build the samples into build/
 #   make run          FujiNet-PC + atari800 with build/hello-c.xex (other program: make run XEX=path)
+#   make run JOY=1    the same with joystick 0 on the cursor keys, fire = Space
 #   make stop         stop this kit's FujiNet-PC
 #
 # Other projects use the kit with  DEV ?= ../development-kit-atari-xl-and-fujinet  (see README).
@@ -48,9 +49,13 @@ fujinet: | build
 	@pgrep -f "$(FUJINET)/fujinet" >/dev/null || \
 	  ( nohup $(DEV)/tools/run-fujinet -u http://127.0.0.1:$(WEB_PORT) >> $(DEV)/build/logs/fujinet.log 2>&1 & sleep 2 )
 
-# -no-kbdjoy: otherwise W/A/S/D, the keypad and Ctrl act as joysticks
+# Keyboard joystick: off by default (programs that read keys, like the BBS sysop console, need
+# every key). JOY=1: joystick 0 = cursor keys, fire = Space (atari800.cfg SDL2_JOY_0_*).
+JOY       ?= 0
+KBDJOY    := $(if $(filter 1,$(JOY)),-kbdjoy0 -no-kbdjoy1,-no-kbdjoy0 -no-kbdjoy1)
+
 run: $(XEX) fujinet
-	$(ATARI800) -config atari800.cfg -no-kbdjoy0 -no-kbdjoy1 -xl -netsio $(NETSIO_PORT) -run $(XEX)
+	$(ATARI800) -config atari800.cfg $(KBDJOY) -xl -netsio $(NETSIO_PORT) -run $(XEX)
 
 # only this kit's instance (matched by its path), never other projects' FujiNet-PC
 stop:

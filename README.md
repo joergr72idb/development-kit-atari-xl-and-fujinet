@@ -33,6 +33,7 @@ Versions are pinned at the top of `tools/setup.sh`. Build logs go to `build/logs
 make                           # builds the samples: build/hello-c.xex, hello-asm.xex, hello-fb.xex
 make run                       # FujiNet-PC + atari800 with the C sample
 make run XEX=build/hello-fb.xex
+make run JOY=1                 # with joystick 0 on the cursor keys, fire = Space
 make stop                      # stops this kit's FujiNet-PC
 ```
 

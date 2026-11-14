@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+._*
+
+# Build output
+build/
+*.o
+*.lst
+*.map
+
+# Editor
+.vscode/
+.idea/
+*.swp

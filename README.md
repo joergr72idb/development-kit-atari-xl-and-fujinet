@@ -27,7 +27,7 @@ tools/setup-linux.sh atari800  # rebuild single parts: cc65 fujinet-lib atari800
 ```
 
 Linux needs these packages first (`setup-linux.sh` lists the missing ones and stops):
-`sudo apt install build-essential git autoconf automake cmake pkg-config libsdl2-dev libmbedtls-dev python3-venv gh unzip curl`
+`sudo apt install build-essential git autoconf automake cmake pkg-config libsdl2-dev libmbedtls-dev python3-venv libssl-dev unzip curl`
 
 Versions are pinned at the top of both setup scripts (keep them in step). Build logs go to `build/logs/`.
 

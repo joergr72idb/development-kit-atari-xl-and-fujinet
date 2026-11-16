@@ -120,7 +120,8 @@ Samples in `samples/`:
 - **ROMs:** `atari800.cfg` uses the original Atari ROMs from `rom/` (not in git, copyrighted):
   `REV02.ROM` = 800XL OS rev. 2 (default), plus 400/800 rev. A PAL/B NTSC, 1200XL rev. 10,
   600XL rev. 1, 800XE rev. 3, XEGS rev. 4 and BASIC A/B/C (CRC-32 list: `rom/OSROMS.TXT`).
-  Without them atari800 falls back to its built-in AltirraOS. atari800 is built with
+  Without `rom/REV02.ROM`, `make run` and `make shot` start atari800 with its built-in AltirraOS
+  (`-xl-rev altirra`) - atari800 doesn't fall back by itself, the screen just stays black. atari800 is built with
   `--disable-download`, so it never fetches ROMs from the internet on its own.
 
 ## Using the kit from other projects
